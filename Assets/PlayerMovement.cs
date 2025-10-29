@@ -5,9 +5,9 @@ public class PlayerMovement : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
-	[SerializeField] private float moveSpeed = 5f;
-	private Rigidbody2D rb;
-	private Vector2 moveInput;
+    [SerializeField] private float moveSpeed = 5f;
+    private Rigidbody2D rb;
+    private Vector2 moveInput;
 
     void Start()
     {
@@ -21,9 +21,9 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-	public void Move(InputAction.CallbackContext context)
-	{
-		moveInput = context.ReadValue<Vector2>();
-	}
+    public void Move(InputAction.CallbackContext context)
+    {
+        moveInput = context.ReadValue<Vector2>();
+    }
 
 }
