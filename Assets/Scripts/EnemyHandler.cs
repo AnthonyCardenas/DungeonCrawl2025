@@ -3,15 +3,8 @@ using UnityEngine;
 public class EnemyHandler : MonoBehaviour
 {
 
-<<<<<<< Updated upstream
-    // Enemy[] enemyArray;
-    Enemy mainEnemy;
-
-
-=======
     // public List<Enemy> enemyArray = new List<Enemy>();
     // Enemy mainEnemy = new Enemy();
->>>>>>> Stashed changes
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
