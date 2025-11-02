@@ -12,14 +12,15 @@ public class HealthBarHandler : MonoBehaviour
     // {
     // }
 
-    // [SerializeField] private HealthBar healthBar;
+    [SerializeField] private HealthBar healthBar;
 
 
     private void Start()
     {
-        // V2
-        // HealthBar healthBar = HealthBar.Create(new Vector3(0, 0), new Vector(1.65, 0.15)); // 1.65, 0.15
-
+        // V2 - to automatically make a healthbar
+        // HealthBar healthBar = HealthBar.Create(new Vector3(0f, 0f), new Vector3(1.65f, 0.15f)); // 1.65, 0.15
+        // Debug.log("Created Scene HealthBar");
+        
         // V1
         // float health = 1f;
         // healthBar.SetSize(.4f);
