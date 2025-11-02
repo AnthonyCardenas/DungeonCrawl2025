@@ -28,7 +28,7 @@ public class Enemy : MonoBehaviour
 
         Texture2D tex = Resources.Load<Texture2D>("Circle");
         Sprite newSprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), Vector2.zero, 100f);
-        spriteRenderer.sprite = newSprite;
+        // spriteRenderer.sprite = newSprite;
 
         Debug.Log("Started Enemy texture");
 
