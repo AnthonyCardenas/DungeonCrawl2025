@@ -5,6 +5,8 @@ public class EnemyHandler : MonoBehaviour
 
     // Enemy[] enemyArray;
     Enemy mainEnemy;
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
