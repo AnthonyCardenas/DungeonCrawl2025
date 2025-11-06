@@ -15,6 +15,7 @@ public class EnemyHealth : MonoBehaviour
     void Start()
     {
         health = fullHealth;
+        percent = 1.0f;
         // GameObject currBar = new GameObject("Healthbar");
         // currBar.transform.position = Vector3.zero;
         Debug.Log("Setting up Enemy");
@@ -49,12 +50,19 @@ public class EnemyHealth : MonoBehaviour
     public void TakeDamage(int damage)
     {
         health -= damage;
-        float percent = (float)health / (float)fullHealth;
+        percent = (float)health / (float)fullHealth;
 
         healthScript.SetSize(percent);
+        if(percent < 0.5)
+        {
+            healthScript.SetColor(Color.red);
 
-        // bar.localScale.x = 0.5;
-        // healthBar.SetSize(0.5);
+            if(percent < 0.0f)
+            {
+                Debug.Log("Kill Object");
+            }
+        }
+
         Debug.Log("Damage Taken");
     }
 
