@@ -42,7 +42,5 @@ public class EnemyAnimator
             m_Animator.Play("idle_down_right");
         else if (dir == Directional8.SouthEast)
             m_Animator.Play("idle_down_right");
-
-        Debug.Log(dir.ToString());
     }
 }

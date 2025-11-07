@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 
 public enum WeaponType
@@ -15,6 +14,7 @@ public class EnemyWeapon : MonoBehaviour
     public float Range;
     public float AttackPoints;
     public GameObject BulletPrefab;
+    public GameObject BarrelTip;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -38,18 +38,19 @@ public class EnemyWeapon : MonoBehaviour
     public void Fire()
     {
         GameObject bullet = Instantiate(BulletPrefab);
-        bullet.transform.position = transform.position;
+        bullet.transform.position = BarrelTip.transform.position;
         Destroy(bullet, 5);
 
         // Assuming 'q' is your quaternion and 'forward_3d' is your reference 3D direction
-        Vector3 rotated_direction_3d = transform.rotation * Vector3.forward; // Or equivalent quaternion rotation operation
+        Vector3 rotated_direction_3d = transform.rotation * Vector3.right; // Use 'right' or 'up' depending on your 2D orientation
 
-        // Project to 2D (e.g., in the XZ plane)
-        Vector2 direction_2d = new Vector2(rotated_direction_3d.x, rotated_direction_3d.z);
+        // Project to 2D (in the XY plane)
+        Vector2 direction_2d = new Vector2(rotated_direction_3d.x, rotated_direction_3d.y);
 
         // Normalize if needed
         direction_2d = direction_2d.normalized;
 
+        // Apply force in 2D
         bullet.GetComponent<Rigidbody2D>().AddForce(direction_2d * Speed, ForceMode2D.Force);
     }
 }

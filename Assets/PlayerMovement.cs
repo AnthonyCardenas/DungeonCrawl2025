@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f;
     private Rigidbody2D rb;
     private Vector2 moveInput;
+    private bool m_KnockBackEffect = false;
+    private float m_KnockBackDuration = 0f;
 
     void Start()
     {
@@ -17,13 +19,32 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        rb.linearVelocity = moveInput * moveSpeed;
+        Vector2 velocity = moveInput* moveSpeed;
+
+        if (m_KnockBackEffect == true)
+        {
+            m_KnockBackDuration += Time.deltaTime;
+            if (m_KnockBackDuration >= 0.20f)
+            {
+                m_KnockBackEffect = false;
+                m_KnockBackDuration = 0;
+            }
+        }
+        else if (m_KnockBackEffect == false)
+        {
+            rb.linearVelocity = velocity;
+        }
 
     }
 
     public void Move(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
+    }
+
+    public void TriggerKnockBackEffect()
+    {
+        m_KnockBackEffect = true;
     }
 
 }
