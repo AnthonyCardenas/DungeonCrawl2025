@@ -4,18 +4,25 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
+    //Health Bar vars
     [SerializeField] private int health;
+    
     public int fullHealth;
     public float percent;
     public GameObject healthBar;
     public HealthBar healthScript;
     // private GameObject bar;
 
+    // Animation Vars
+    [SerializeField] private Animator enemyAnimator;
+    private float hitTimer;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         health = fullHealth;
         percent = 1.0f;
+        hitTimer = 0.0f;
         // GameObject currBar = new GameObject("Healthbar");
         // currBar.transform.position = Vector3.zero;
         Debug.Log("Setting up Enemy");
@@ -45,6 +52,10 @@ public class EnemyHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (hitTimer > 0f)
+            hitTimer -= Time.deltaTime;
+        else 
+            enemyAnimator.SetBool("isHurt", false);
     }
 
     public void TakeDamage(int damage)
@@ -53,14 +64,27 @@ public class EnemyHealth : MonoBehaviour
         percent = (float)health / (float)fullHealth;
 
         healthScript.SetSize(percent);
-        if(percent < 0.5)
+        
+        if (percent < 0.5)
         {
             healthScript.SetColor(Color.red);
 
-            if(percent < 0.0f)
+            if (percent <= 0.0f)
             {
                 Debug.Log("Kill Object");
             }
+        }
+        
+        if(health <= 0)
+        {
+            enemyAnimator.SetBool("isDead", true);
+            // Debug.Log("Dead Animation Triggered");
+        } else
+        {
+            enemyAnimator.SetBool("isDead", false);
+            enemyAnimator.SetBool("isHurt", true);
+            hitTimer = 0.3f;
+            // Debug.Log("Hurt Animation Triggered");
         }
 
         Debug.Log("Damage Taken");

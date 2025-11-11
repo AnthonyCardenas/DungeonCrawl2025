@@ -5492,6 +5492,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HealthBar
   healthGameObject: {fileID: 2120523505}
   bar: {fileID: 1658792993}
+--- !u!95 &2031020464
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031020457}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1563e31865832804ea3111c2b0cbf9f5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 1
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2036606941
 GameObject:
   m_ObjectHideFlags: 0
@@ -5780,6 +5802,10 @@ PrefabInstance:
       propertyPath: healthScript
       value: 
       objectReference: {fileID: 2031020463}
+    - target: {fileID: 2794659512133817466, guid: 06f72c98b8873ed448286e2feca564f0, type: 3}
+      propertyPath: enemyAnimator
+      value: 
+      objectReference: {fileID: 2031020464}
     - target: {fileID: 3706427971755624390, guid: 06f72c98b8873ed448286e2feca564f0, type: 3}
       propertyPath: m_Name
       value: Enemy
@@ -5878,6 +5904,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3706427971755624390, guid: 06f72c98b8873ed448286e2feca564f0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2031020463}
+    - targetCorrespondingSourceObject: {fileID: 3706427971755624390, guid: 06f72c98b8873ed448286e2feca564f0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2031020464}
   m_SourcePrefab: {fileID: 100100000, guid: 06f72c98b8873ed448286e2feca564f0, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
