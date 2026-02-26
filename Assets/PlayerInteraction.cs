@@ -5,8 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerInteraction : MonoBehaviour
 {
-    // Area
-    // [SerializeField] float interactRange = 2f;
+    
     // Time
     private float timeBtwAttack;
     public float startTimeBtwAttack;
@@ -84,7 +83,7 @@ public class PlayerInteraction : MonoBehaviour
 
         meleeSpriteRenderer.enabled = true;
         yield return new WaitForSeconds(duration);
-        Debug.Log("Melee Sprite enabled");
+        // Debug.Log("Melee Sprite enabled");
         meleeSpriteRenderer.enabled = false;
     }
 
@@ -102,7 +101,7 @@ public class PlayerInteraction : MonoBehaviour
                 // enemiesToDamage[i].GetComponent<EnemyHealth>().TakeDamage(damage);
                 enemy.GetComponent<EnemyHealth>().TakeDamage(damage);
             }
-            Debug.Log($"Attack function performed");
+            // Debug.Log($"Player attack performed");
 
             StartCoroutine(ShowSpriteForDuration(0.25f));
 
@@ -124,7 +123,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private IEnumerator PerformDirAttack()
     {
-        Debug.Log("Attack started");
+        // Debug.Log("Player attack started");
 
         // Show sprite
         if (meleeDirSpriteRenderer != null)
@@ -148,7 +147,7 @@ public class PlayerInteraction : MonoBehaviour
                 if (enemy != null)
                 {
                     enemy.TakeDamage(damage);
-                    Debug.Log($"Hit enemy: {enemy.name}");
+                    // Debug.Log($"Hit enemy: {enemy.name}");
                 }
             }
         }
@@ -163,7 +162,7 @@ public class PlayerInteraction : MonoBehaviour
         if (meleeDirPolyColl != null)
             meleeDirPolyColl.enabled = false;
 
-        Debug.Log("Attack finished");
+        // Debug.Log("Player attack finished");
     }
     
     private void OnDrawGizmosSelected()

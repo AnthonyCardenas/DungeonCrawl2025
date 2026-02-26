@@ -70,6 +70,11 @@ public class HealthBar : MonoBehaviour
         }
         
     }
+
+    public void Delete()
+    {
+        Destroy(this.healthGameObject);
+    }
     
      public void SetSize(float sizeNormalized)
     {

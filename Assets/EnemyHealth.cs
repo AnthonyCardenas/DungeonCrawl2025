@@ -17,15 +17,20 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private Animator enemyAnimator;
     private float hitTimer;
 
+    // public GameObject CurrEnemy;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         health = fullHealth;
         percent = 1.0f;
         hitTimer = 0.0f;
+        // CurrEnemy = GetComponent<Enemy>();
         // GameObject currBar = new GameObject("Healthbar");
         // currBar.transform.position = Vector3.zero;
-        Debug.Log("Setting up Enemy");
+
+        // Debug.Log("Setting up Enemy");
+        
         if (healthBar == null)
         {
             // Instantiate(Healthbar, new Vector3(0, 0, 0), Quaternion.identity);
@@ -56,6 +61,10 @@ public class EnemyHealth : MonoBehaviour
             hitTimer -= Time.deltaTime;
         else 
             enemyAnimator.SetBool("isHurt", false);
+
+        // if (deathTimer > 1.0f)
+        //     deathTimer -= Time.deltaTime;
+        //     Destroy(this.GameObject);
     }
 
     public void TakeDamage(int damage)
@@ -71,7 +80,8 @@ public class EnemyHealth : MonoBehaviour
 
             if (percent <= 0.0f)
             {
-                Debug.Log("Kill Object");
+                // Debug.Log("Deleted Healthbar Object");
+                healthScript.Delete();
             }
         }
         
@@ -79,6 +89,7 @@ public class EnemyHealth : MonoBehaviour
         {
             enemyAnimator.SetBool("isDead", true);
             // Debug.Log("Dead Animation Triggered");
+            Destroy(this.gameObject, 1.3f);
         } else
         {
             enemyAnimator.SetBool("isDead", false);
@@ -87,7 +98,7 @@ public class EnemyHealth : MonoBehaviour
             // Debug.Log("Hurt Animation Triggered");
         }
 
-        Debug.Log("Damage Taken");
+        // Debug.Log("Enemy took damage");
     }
 
 }
