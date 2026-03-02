@@ -14,22 +14,27 @@ public class PlayerInteraction : MonoBehaviour
     public Transform attackPos;
     public LayerMask enemyLayer;
     public float attackRange;
-    public int damage;
-    private bool hitInput;
+    // public int damage;
+    // private bool hitInput;
 
-    // animation
+    // Area Attack animation
     public GameObject meleeAreaObject;
     public SpriteRenderer meleeSpriteRenderer;
+    [SerializeField] private int areaDamage;
 
     // Directional Attack
     public GameObject meleeDirObject;
     private PolygonCollider2D meleeDirPolyColl;
     public SpriteRenderer meleeDirSpriteRenderer;
+    [SerializeField] private int dirDamage;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        damage = 1;
+        // damage = 1;
+        dirDamage = 1;
+        areaDamage = 1;
+        
         timeBtwAttack = 0.0f;
         startTimeBtwAttack = 0.8f;
 
@@ -87,6 +92,20 @@ public class PlayerInteraction : MonoBehaviour
         meleeSpriteRenderer.enabled = false;
     }
 
+    private IEnumerator ShowDirMeleeForDuration(float duration)
+    {
+        // Debug.Log("Dir Attack Sprite Shown");
+        if (meleeDirSpriteRenderer == null)
+        {
+            Debug.LogError("Dir Melee Sprite Renderer not found");
+            yield break;
+        }
+
+        meleeDirSpriteRenderer.enabled = true;
+        yield return new WaitForSeconds(duration);
+        meleeDirSpriteRenderer.enabled = false;
+    }
+
     public void OnAttack(InputAction.CallbackContext context)
     {
 
@@ -99,7 +118,7 @@ public class PlayerInteraction : MonoBehaviour
             foreach (var enemy in enemiesToDamage)
             {
                 // enemiesToDamage[i].GetComponent<EnemyHealth>().TakeDamage(damage);
-                enemy.GetComponent<EnemyHealth>().TakeDamage(damage);
+                enemy.GetComponent<EnemyHealth>().TakeDamage(areaDamage);
             }
             // Debug.Log($"Player attack performed");
 
@@ -112,67 +131,65 @@ public class PlayerInteraction : MonoBehaviour
 
     public void OnDirAttack(InputAction.CallbackContext context)
     {
-        // if (!context.performed) return;  // Only trigger once per press
+        if (!context.performed) return;  // Only trigger once per press
+        
+        
+        // Debug.Log("Dir Attack");
+        // TODO: Incorporate player facing direction into attack
+        
+        float boxAngle = 0;
+        Vector2 boxSizeVector = new Vector2(3.25f, 1.7f);
+        Vector2 weaponPos = attackPos.position;
+        weaponPos.y += 1.7f;
+        // Debug.Log($"Attack placed on {weaponPos}");
 
-        if (context.performed && timeBtwAttack <= 0)
+        if (timeBtwAttack <= 0.0f)
         {
-            StartCoroutine(PerformDirAttack());
-            timeBtwAttack = startTimeBtwAttack;
-        }
-    }
+            // Debug.Log("Attack Allowed");
 
-    private IEnumerator PerformDirAttack()
-    {
-        // Debug.Log("Player attack started");
-
-        // Show sprite
-        if (meleeDirSpriteRenderer != null)
-            meleeDirSpriteRenderer.enabled = true;
-
-        // Enable hitbox
-        if (meleeDirPolyColl != null)
-        {
-            meleeDirPolyColl.enabled = true;
-
-            // Use OverlapCollider to detect enemies currently inside
-            ContactFilter2D filter = new ContactFilter2D();
-            filter.SetLayerMask(enemyLayer);
-
-            Collider2D[] results = new Collider2D[10];
-            int hits = meleeDirPolyColl.OverlapCollider(filter, results);
-
-            for (int i = 0; i < hits; i++)
+            Collider2D[] enemiesToDamage = Physics2D.OverlapBoxAll(weaponPos, boxSizeVector, boxAngle, enemyLayer);
+            foreach (var enemy in enemiesToDamage)
             {
-                EnemyHealth enemy = results[i].GetComponent<EnemyHealth>();
-                if (enemy != null)
-                {
-                    enemy.TakeDamage(damage);
-                    // Debug.Log($"Hit enemy: {enemy.name}");
-                }
+                // Debug.Log("Found Enemy");
+                enemy.GetComponent<EnemyHealth>().TakeDamage(dirDamage);
             }
+
+            StartCoroutine(ShowDirMeleeForDuration(0.5f));
+            timeBtwAttack = startTimeBtwAttack;
+
+            // StartCoroutine(PerformDirAttack());
+            // Debug.Log("Dir Attack Sprite Shown");
+            
         }
-
-        // Wait for duration
-        yield return new WaitForSeconds(0.4f);
-
-        // Hide sprite and disable collider
-        if (meleeDirSpriteRenderer != null)
-            meleeDirSpriteRenderer.enabled = false;
-
-        if (meleeDirPolyColl != null)
-            meleeDirPolyColl.enabled = false;
-
-        // Debug.Log("Player attack finished");
+        
     }
+
     
     private void OnDrawGizmosSelected()
     {
-        if(attackPos != null)
+        // if(attackPos != null)
+        // {
+        //     Gizmos.DrawWireSphere(attackPos.position, attackRange);
+        //     Gizmos.color = Color.red;
+        // }
+        if (attackPos != null)
         {
-            Gizmos.DrawWireSphere(attackPos.position, attackRange);
             Gizmos.color = Color.red;
+
+            // Save the current Gizmos matrix to restore it later
+            Matrix4x4 originalMatrix = Gizmos.matrix;
+
+            // Set the matrix to match the position, rotation, and scale of your detection point
+            // Gizmos.matrix = Matrix4x4.TRS(attackPos.position, Quaternion.Euler(0, 0, detectionAngle), Vector3.one);
+
+            // Draw a wire cube (which will look like a box in 2D)
+            // Gizmos.DrawWireCube(Vector3.zero, new Vector3(detectionSize.x, detectionSize.y, 0));
+
+            // Restore the original Gizmos matrix
+            // Gizmos.matrix = originalMatrix;
         }
     }
+    
 
     // for opening doors / chests
     // public void Interact() {}

@@ -11,9 +11,19 @@ public class PlayerMovement : MonoBehaviour
     private bool m_KnockBackEffect = false;
     private float m_KnockBackDuration = 0f;
 
+    public enum Direction {
+        Up,
+        Right,
+        Down,
+        Left
+    }
+
+    public Direction currDir; 
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        currDir = Direction.Up;
     }
 
     // Update is called once per frame
@@ -40,6 +50,23 @@ public class PlayerMovement : MonoBehaviour
     public void Move(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
+
+        if(moveInput.y > 0)
+        {
+            currDir = Direction.Up;
+        } else
+        {
+            currDir = Direction.Down;
+        }
+        if(moveInput.x > 0)
+        {
+            currDir = Direction.Right;
+        } else
+        {
+            currDir = Direction.Left;
+        }
+        //Debug.Log(moveInput);
+        //currDir = moveInput;
     }
 
     public void TriggerKnockBackEffect()
