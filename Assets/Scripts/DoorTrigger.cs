@@ -9,19 +9,45 @@ public class DoorTrigger : MonoBehaviour
 
     private int playerLayer;
 
+    [SerializeField] private DoorState currDoorState = DoorState.Locked;
+
     void Start()
     {
         playerLayer = LayerMask.NameToLayer("Player");
+
+        currDoorState = DoorState.Locked;
+        closedDoorSprite.enabled = true;
+        openDoorSprite.enabled = true;
         // if(doorCollider == null)
-        //     doorCollider = GetComponent<Collider2D>("DoorCollider");
+        // {
+        //     doorCollider = GetComponent<Collider2D>();
+        //     Debug.Log($"Found Collider {doorCollider.name}");
+        // } else
+        // {
+        //     Debug.Log($"No Collider Found");
+        // }
+            
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.layer == playerLayer)
         {
-            OpenDoor();
-            // doorSprite.enabled = false;
+            
+            if (currDoorState == DoorState.Unlocked)
+            {
+                // Debug.Log("Door is Unlocked. Opening door.");
+                OpenDoor();
+            }
+            else if (currDoorState == DoorState.Locked)
+            {
+                // Debug.Log("Door is Locked. Can't open.");
+            }
+            else if (currDoorState == DoorState.Open)
+            {
+                // Debug.Log("Door is already open.");
+            }
+            Debug.Log("Need to fix wall colliders. Door is functional.");
         }
     }
 
@@ -29,25 +55,45 @@ public class DoorTrigger : MonoBehaviour
     {
         if (other.gameObject.layer == playerLayer)
         {
-            CloseDoor();
-            // doorSprite.enabled = true;
+            if (currDoorState == DoorState.Open)
+            {
+                // Debug.Log("Closing the open door");
+                CloseDoor();
+            }
+            else if (currDoorState == DoorState.Locked)
+            {
+                // Debug.Log("Door is Locked leaving door area.");
+            }
         }
+    }
+
+    public void LockDoor()
+    {
+        // Debug.Log("Locking door");
+        currDoorState = DoorState.Locked;
+    }
+
+    public void UnlockDoor()
+    {
+        //Debug.Log("Unlocking door");
+        currDoorState = DoorState.Unlocked;
     }
 
     public void OpenDoor()
     {
-        Debug.Log("Opened door");
-        // Populate adjacent room
-        // Deactivate door sprite
-        openDoorSprite.enabled = true;
-        closedDoorSprite.enabled = false;
+        // Debug.Log("Opened door");
+
         // Deactivate door collider
         if(doorCollider != null)
         {
             doorCollider.enabled = false;
-            Debug.Log("Collider Disabled");
+            // Debug.Log("Collider Disabled");
         }
-        
+        // Deactivate door sprite
+        openDoorSprite.enabled = true;
+        closedDoorSprite.enabled = false;
+
+        currDoorState = DoorState.Open;
     }
 
     public void CloseDoor()
@@ -57,10 +103,12 @@ public class DoorTrigger : MonoBehaviour
         if(doorCollider != null)
         {
             doorCollider.enabled = true;
-            Debug.Log("Collider Enabled");
+            // Debug.Log("Collider Enabled");
         }
         // Reactivate door sprite
         openDoorSprite.enabled = false;
         closedDoorSprite.enabled = true;
+
+        currDoorState = DoorState.Unlocked;
     }
 }

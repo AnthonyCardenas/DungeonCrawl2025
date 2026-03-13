@@ -17,6 +17,8 @@ public class EnemyInteraction : MonoBehaviour
     public int damage;
 
     public bool playerInRange;
+    // private bool isDead;
+    private bool attackAllowed;
 
     // Art
     public SpriteRenderer meleeSpriteRenderer;
@@ -28,7 +30,8 @@ public class EnemyInteraction : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        // isDead = false;
+        attackAllowed = true;
         playerInRange = false; 
 
         if (damage == 0)
@@ -43,6 +46,9 @@ public class EnemyInteraction : MonoBehaviour
         
         timeBtwAttack = 0.0f; 
         startTimeBtwAttack = 1.5f; 
+
+        // if(currHandler == null)
+
         
     }
 
@@ -52,12 +58,40 @@ public class EnemyInteraction : MonoBehaviour
         // Check attack timer
         if (timeBtwAttack > 0)
             timeBtwAttack -= Time.deltaTime;
-        else if (playerInRange)
+        else if ( playerInRange )
         {
-            StartCoroutine(ShowSpriteForDuration(0.5f));
-            PerformAttack();
-            timeBtwAttack = startTimeBtwAttack;
+            // Check if Dead
+            if(attackAllowed)
+            {
+                
+                // Debug.Log("Found Alive in Enemy Interaction Script");
+                StartCoroutine(ShowSpriteForDuration(0.5f));
+                PerformAttack();
+                timeBtwAttack = startTimeBtwAttack;
+            } else
+            {
+                // Debug.Log("Found Dead in Enemy Interaction Script");
+            }
+            
         }
+    }
+
+    // public void SetIsDead(bool deadStatus)
+    // {
+    //     Debug.Log("Enemy Set to Dead Status in Enemy Interaction script");
+    //     isDead = deadStatus;
+    // }
+
+    public void DeactivateAttack()
+    {
+        // Debug.Log("Enemy not allowed to attack in Enemy Interaction script");
+        attackAllowed = false;
+    }
+
+    public void ActivateAttack()
+    {
+        // Debug.Log("Enemy allowed to attack in Enemy Interaction script");
+        attackAllowed = true;
     }
 
     public void SetPlayerInRange(bool present)

@@ -28,15 +28,25 @@ public class PlayerInteraction : MonoBehaviour
     public SpriteRenderer meleeDirSpriteRenderer;
     [SerializeField] private int dirDamage;
 
+    [SerializeField] private DirectionalHitbox currHitbox;
+    private Direction currDir = Direction.North;
+
+    // float boxAngle = 0; 
+    // Vector2 boxSizeVector = new Vector2(3.25f, 1.7f); 
+    // Vector2 weaponPos = new Vector2(0.0f, 0.0f); 
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         // damage = 1;
-        dirDamage = 1;
         areaDamage = 1;
+        dirDamage = 1;
         
         timeBtwAttack = 0.0f;
         startTimeBtwAttack = 0.8f;
+
+        // weaponPos = gameObject.transform.position;
 
         if (meleeAreaObject == null)
         {
@@ -66,6 +76,12 @@ public class PlayerInteraction : MonoBehaviour
         if(meleeDirPolyColl != null)
         {
             meleeDirPolyColl.enabled = false;
+        }
+
+        if(currHitbox == null)
+        {
+            GameObject tempObj = GameObject.Find("MeleeDirHitbox");
+            currHitbox = tempObj.GetComponent<DirectionalHitbox>();
         }
         
         
@@ -133,14 +149,72 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (!context.performed) return;  // Only trigger once per press
         
-        
         // Debug.Log("Dir Attack");
-        // TODO: Incorporate player facing direction into attack
         
         float boxAngle = 0;
         Vector2 boxSizeVector = new Vector2(3.25f, 1.7f);
         Vector2 weaponPos = attackPos.position;
+        // boxAngle = 0;
+        // boxSizeVector = new Vector2(3.25f, 1.7f);
+        // weaponPos = attackPos.position;
         weaponPos.y += 1.7f;
+
+        currDir = currHitbox.GetDirection();
+        if( currDir == Direction.North )
+        {
+            boxSizeVector = new Vector2(3.25f, 1.7f);
+            weaponPos = attackPos.position;
+            weaponPos.y += 1.7f;
+        } else if( currDir == Direction.East )
+        {
+            boxSizeVector = new Vector2(1.7f, 3.25f);
+            weaponPos = attackPos.position;
+            weaponPos.x += 1.7f;
+        } 
+        else if( currDir == Direction.South )
+        {
+            boxSizeVector = new Vector2(3.25f, 1.7f);
+            weaponPos = attackPos.position;
+            weaponPos.y -= 1.7f;
+        } 
+        else if( currDir == Direction.West )
+        {
+            boxSizeVector = new Vector2(1.7f, 3.25f);
+            weaponPos = attackPos.position;
+            weaponPos.x -= 1.7f;
+        } 
+        else if( currDir == Direction.NorthEast )
+        {
+            boxAngle = -45;
+            boxSizeVector = new Vector2(3.25f, 1.7f);
+            weaponPos = attackPos.position;
+            weaponPos.x += 1.32f;
+            weaponPos.y += 1.32f;
+        } 
+        else if( currDir == Direction.SouthEast )
+        {
+            boxAngle = 45;
+            boxSizeVector = new Vector2(3.25f, 1.7f);
+            weaponPos = attackPos.position;
+            weaponPos.x += 1.32f;
+            weaponPos.y -= 1.32f;
+        } 
+        else if( currDir == Direction.SouthWest )
+        {
+            boxAngle = -45;
+            boxSizeVector = new Vector2(3.25f, 1.7f);
+            weaponPos = attackPos.position;
+            weaponPos.x -= 1.32f;
+            weaponPos.y -= 1.32f;
+        } 
+        else if( currDir == Direction.NorthWest )
+        {
+            boxAngle = 45;
+            boxSizeVector = new Vector2(3.25f, 1.7f);
+            weaponPos = attackPos.position;
+            weaponPos.x -= 1.32f;
+            weaponPos.y += 1.32f;
+        } 
         // Debug.Log($"Attack placed on {weaponPos}");
 
         if (timeBtwAttack <= 0.0f)
@@ -174,16 +248,18 @@ public class PlayerInteraction : MonoBehaviour
         // }
         if (attackPos != null)
         {
-            Gizmos.color = Color.red;
+
+            // Gizmos.DrawWireSphere(attackPos.position, attackRange);
+            // Gizmos.color = Color.red;
 
             // Save the current Gizmos matrix to restore it later
-            Matrix4x4 originalMatrix = Gizmos.matrix;
+            // Matrix4x4 originalMatrix = Gizmos.matrix;
 
             // Set the matrix to match the position, rotation, and scale of your detection point
             // Gizmos.matrix = Matrix4x4.TRS(attackPos.position, Quaternion.Euler(0, 0, detectionAngle), Vector3.one);
 
-            // Draw a wire cube (which will look like a box in 2D)
-            // Gizmos.DrawWireCube(Vector3.zero, new Vector3(detectionSize.x, detectionSize.y, 0));
+            // Draw a wire cube for the Directional attack
+            // Gizmos.DrawWireCube(weaponPos, boxSizeVector);
 
             // Restore the original Gizmos matrix
             // Gizmos.matrix = originalMatrix;

@@ -10,20 +10,29 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 moveInput;
     private bool m_KnockBackEffect = false;
     private float m_KnockBackDuration = 0f;
+    // [SerializeField] private DirectionalHitbox currHitbox;
+    public DirectionalHitbox currHitbox;
 
-    public enum Direction {
-        Up,
-        Right,
-        Down,
-        Left
-    }
-
+    // public enum Direction {
+    //     North,
+    //     NorthEast,
+    //     East,
+    //     SouthEast,
+    //     South,
+    //     SouthWest,
+    //     West,
+    //     NorthWest
+    // }
     public Direction currDir; 
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        currDir = Direction.Up;
+        currDir = Direction.North;
+        // if(currHitbox == null)
+        // {
+        //     currHitbox = GameObject.GetComponent<DirectionalHitbox>();
+        // }
     }
 
     // Update is called once per frame
@@ -49,22 +58,43 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move(InputAction.CallbackContext context)
     {
+        
         moveInput = context.ReadValue<Vector2>();
 
-        if(moveInput.y > 0)
+        if (!context.performed) return;
+
+        if( (moveInput.y > 0) && (moveInput.x > 0) )
         {
-            currDir = Direction.Up;
-        } else
+            currDir = Direction.NorthEast;
+        } else if ( (moveInput.y < 0) && (moveInput.x > 0) )
         {
-            currDir = Direction.Down;
-        }
-        if(moveInput.x > 0)
+            currDir = Direction.SouthEast;
+        } else if ( moveInput.x > 0 )
         {
-            currDir = Direction.Right;
-        } else
+            currDir = Direction.East;
+        } else if ( (moveInput.y > 0) && (moveInput.x < 0) )
         {
-            currDir = Direction.Left;
-        }
+            currDir = Direction.NorthWest;
+        } else if ( (moveInput.y < 0) && (moveInput.x < 0) )
+        {
+            currDir = Direction.SouthWest;
+        } else if ( moveInput.x < 0 )
+        {
+            currDir = Direction.West;
+        } else if ( moveInput.y < 0 )
+        {
+            currDir = Direction.South;
+        } else if ( moveInput.y > 0 )
+        {
+            currDir = Direction.North;
+        } 
+        // else // 0,0 or no movement
+        // {
+        //     currDir = Direction.North;
+        // }
+        // Debug.Log($"Move Input: {currDir}");
+        
+        currHitbox.changeMeleeDirection(currDir); 
         //Debug.Log(moveInput);
         //currDir = moveInput;
     }
