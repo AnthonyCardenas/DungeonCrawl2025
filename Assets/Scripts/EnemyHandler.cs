@@ -5,9 +5,9 @@ public class EnemyHandler : MonoBehaviour
 
     public GameObject currPrefab;
     [SerializeField] private DoorTrigger currNorthDoor;
-    // [SerializeField] private DoorTrigger currEastDoor;
+    [SerializeField] private DoorTrigger currEastDoor;
     [SerializeField] private DoorTrigger currSouthDoor;
-    // [SerializeField] private DoorTrigger currWestDoor;
+    [SerializeField] private DoorTrigger currWestDoor;
     
 
     [SerializeField] private int maxNumEnemies;
@@ -53,11 +53,38 @@ public class EnemyHandler : MonoBehaviour
         currNumEnemies--;
         if(currNumEnemies <= 0)
         {
-            Debug.Log("All enemies killed");
+            Debug.Log("All enemies killed. Doors unlocked.");
             // SetDoorState(DoorState.Unlocked);
-            currNorthDoor.UnlockDoor();
+            if(currNorthDoor == null)
+            {
+                Debug.Log("North Door not found in Enemy Handler.");
+            } else
+            {
+                currNorthDoor.UnlockDoor();
+            }
+            if(currEastDoor == null)
+            {
+                Debug.Log("East Door not found in Enemy Handler.");
+            } else
+            {
+                currEastDoor.UnlockDoor();
+            }
+            if(currSouthDoor == null)
+            {
+                Debug.Log("South Door not found in Enemy Handler.");
+            } else
+            {
+                currSouthDoor.UnlockDoor();
+            }
+            if(currWestDoor == null)
+            {
+                Debug.Log("West Door not found in Enemy Handler.");
+            } else
+            {
+                currWestDoor.UnlockDoor();
+            }
             // currEastDoor.UnlockDoor();
-            currSouthDoor.UnlockDoor();
+            // currSouthDoor.UnlockDoor();
             // currWestDoor.UnlockDoor();
 
             // Populate adjacent room

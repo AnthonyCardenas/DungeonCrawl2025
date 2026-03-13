@@ -47,7 +47,7 @@ public class DoorTrigger : MonoBehaviour
             {
                 // Debug.Log("Door is already open.");
             }
-            Debug.Log("Need to fix wall colliders. Door is functional.");
+            // Debug.Log("Door is not connected to Game Enemy Handler.");
         }
     }
 
