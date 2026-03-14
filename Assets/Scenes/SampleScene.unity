@@ -201,6 +201,7 @@ MonoBehaviour:
   doorStyle: {fileID: 3198615300687432236, guid: 9e0edb004379cf240bb2a01218d2be19, type: 3}
   horizontalWallStyle: {fileID: 7380582419408731978, guid: 513e32bfc0b7def4496a094ea9f5a00f, type: 3}
   verticalWallStyle: {fileID: 2171506623377484899, guid: 0781ff29440b95d409eb0a4015139983, type: 3}
+  floorPrefab: {fileID: 6432143454685055664, guid: d853ed6014f14f0419a1aab6199d9e7d, type: 3}
   roomCenter: {x: 0, y: 22, z: 0}
 --- !u!1 &22242094
 GameObject:

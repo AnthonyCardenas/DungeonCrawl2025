@@ -23,7 +23,7 @@ public class RoomHandler : MonoBehaviour
     /// 
     public const int verticalWallOffset = 11; 
     public const int horizontalWallOffset = 8;
-    public const int wallZOffset = 10;
+    public const int wallZOffset = 30;
     [SerializeField] private GameObject horizontalWallStyle;
     [SerializeField] private GameObject verticalWallStyle;
     private GameObject currNorthWall;
@@ -32,6 +32,8 @@ public class RoomHandler : MonoBehaviour
     private GameObject currWestWall;
 
     //// Floor Instantiation ////
+    private const int floorZOffset = 40;
+    [SerializeField] private GameObject floorPrefab;
     
     //// Room Location ////  
     public Vector3 roomCenter;
@@ -42,8 +44,8 @@ public class RoomHandler : MonoBehaviour
     {
         roomCenter = new Vector3( 0.0f, 21.5f, 0.0f);
         placeDoors();
-        // Debug.Log("Working on populating walls in next room.");
         placeWalls();
+        placeFloors();
     }
     
     // Update is called once per frame
@@ -296,5 +298,15 @@ public class RoomHandler : MonoBehaviour
     // private void activateWalls() {}
     // private void deactivateWalls() {}
 
-    
+    private void placeFloors()
+    {
+        Vector3 currFloorPos = roomCenter;
+        currFloorPos.z += floorZOffset;
+        Quaternion currFloorRotation = Quaternion.identity;
+        // Transform currFloorPanel; // use to remove sections of the floor
+        if(floorPrefab != null)
+            Instantiate(floorPrefab, currFloorPos, currFloorRotation);
+        else 
+            Debug.Log("No Floor Prefab found in room handler.");
+    }
 }
