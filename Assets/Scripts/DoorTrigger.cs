@@ -10,12 +10,15 @@ public class DoorTrigger : MonoBehaviour
     private int playerLayer;
 
     [SerializeField] private DoorState currDoorState = DoorState.Locked;
+    // [SerializeField] private DoorState currDoorState;
 
     void Start()
     {
         playerLayer = LayerMask.NameToLayer("Player");
 
-        currDoorState = DoorState.Locked;
+        if(currDoorState == null)
+            currDoorState = DoorState.Locked;
+        
         closedDoorSprite.enabled = true;
         openDoorSprite.enabled = true;
         // if(doorCollider == null)
@@ -27,6 +30,11 @@ public class DoorTrigger : MonoBehaviour
         //     Debug.Log($"No Collider Found");
         // }
             
+    }
+
+    public DoorState GetDoorState()
+    {
+        return currDoorState;
     }
 
     void OnTriggerEnter2D(Collider2D other)
