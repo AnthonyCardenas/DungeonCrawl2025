@@ -1,26 +1,52 @@
 using UnityEngine;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
 public class PathNode
 {
-    // private Grid<PathNode> grid;
-    // private int x;
-    // private int y;
+    
+    private GenGrid<PathNode> grid;
+    public int x;
+    public int y;
 
-    // public int gCost;
-    // public int hCost;
-    // public int fCost;
+    public int gCost;
+    public int hCost;
+    public int fCost;
 
-    // public PathNode cameFromNode;
+    public bool isPassable; // path is available through this node
+    public PathNode cameFromNode;
 
-    // public PathNode(Grid<PathNode> grid, int x, int y)
+    public PathNode(GenGrid<PathNode> grid, int x, int y)
+    {
+        this.grid = grid;
+        this.x = x;
+        this.y = y;
+        this.isPassable = true;
+    }
+
+    public void SetIsPassable(bool isPassable)
+    {
+        this.isPassable = isPassable;
+        grid.TriggerGridObjectChanged(x, y);
+    }
+
+    // public int GetX()
     // {
-    //     this.grid == grid;
-    //     this.x = x;
-    //     this.y = y;
+    //     return x;
     // }
 
-    // public override string ToString()
+    // public int GetY()
     // {
-    //     return x + "," + y;
+    //     return y;
     // }
+
+    public void CalculateFCost()
+    {
+        fCost = gCost + hCost;
+    }
+    public override string ToString()
+    {
+        return x + "," + y;
+    }
 }

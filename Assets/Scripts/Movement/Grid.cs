@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class Grid
 {
+
     private int width;
     private int height;
     private float cellSize;
@@ -39,8 +40,22 @@ public class Grid
         Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 100f);
         Debug.DrawLine(GetWorldPosition(width, 0),  GetWorldPosition(width, height), Color.white, 100f);
 
-        SetValue(2,1, 42);
+        // SetValue(2,1, 42);
 
+    }
+    public int GetWidth()
+    {
+        return width;
+    }
+
+    public int GetHeight()
+    {
+        return height;
+    }
+
+    public float GetCellSize()
+    {
+        return cellSize;
     }
 
     private Vector3 GetWorldPosition(int x, int y)
