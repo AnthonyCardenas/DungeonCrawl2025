@@ -15,15 +15,32 @@ public class Pathfinding
     private List<PathNode> closedList;
     
 
-    public Pathfinding(int width, int height)
+    public Pathfinding(int width, int height, float cellSize)
     {
         Instance = this;
-        grid = new GenGrid<PathNode>(width, height, 10f, Vector3.zero, (GenGrid<PathNode> g, int x, int y) => new PathNode(g, x, y));
+        grid = new GenGrid<PathNode>(width, height, cellSize, Vector3.zero, (GenGrid<PathNode> g, int x, int y) => new PathNode(g, x, y));
     }
 
     public GenGrid<PathNode> GetGrid()
     {
         return grid;
+    }
+
+    public bool InsideGrid(Vector3 objectPosition)
+    {
+        float lowX  = grid.GetOriginPosition().x;
+        float lowY  = grid.GetOriginPosition().y;
+        float highX = grid.GetOriginPosition().x + grid.GetWidth()  * grid.GetCellSize();
+        float highY = grid.GetOriginPosition().y + grid.GetHeight() * grid.GetCellSize();
+
+        if(objectPosition.x > lowX && objectPosition.x < highX && objectPosition.y > lowY && objectPosition.y < highY )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     /// Returns a List of vectors leading to the end position
@@ -64,12 +81,19 @@ public class Pathfinding
         // maybe improve this by making it not On^2
         for(int x = 0; x < grid.GetWidth(); x++)
         {
-            for(int y = 0; y < grid.GetWidth(); y++)
+            for(int y = 0; y < grid.GetHeight(); y++)
             {
                 PathNode currNode = grid.GetGridObject(x, y);
-                currNode.gCost = int.MaxValue;
-                currNode.CalculateFCost();
-                currNode.cameFromNode = null;
+                if(currNode != null)
+                {
+                    currNode.gCost = int.MaxValue;
+                    currNode.CalculateFCost();
+                    currNode.cameFromNode = null;
+                } else
+                {
+                    Debug.Log("Could not find grid object. Pathfinding: line 86.");
+                }
+                
             }
         }
         // Debug.Log("Setup the grid to pathfind.");

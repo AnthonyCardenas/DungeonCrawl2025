@@ -32,17 +32,17 @@ public class RoomHandler : MonoBehaviour
     private GameObject currWestWall;
 
     //// Floor Instantiation ////
-    private const int floorZOffset = 40;
+    private const int floorZOffset = 100;
     [SerializeField] private GameObject floorPrefab;
     
     //// Room Location ////  
-    public Vector3 roomCenter;
+    public Vector3 roomCenter = new Vector3( 0.0f, 21.5f, 0.0f);
     
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        roomCenter = new Vector3( 0.0f, 21.5f, 0.0f);
+        // roomCenter = new Vector3( 0.0f, 21.5f, 0.0f);
         placeDoors();
         placeWalls();
         placeFloors();

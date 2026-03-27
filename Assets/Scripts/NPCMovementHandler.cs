@@ -3,13 +3,14 @@ using UnityEngine.InputSystem;
 using System.Collections;
 using System.Collections.Generic;
 
-public class EnemyMovement : MonoBehaviour
+public class NPCMovementHandler : MonoBehaviour
 {
     /// Enemy State Machine ///
     public enum MoveState
     {
         Idle,
         Follow,
+        CloseFollow,
         Stop,
         ReturnHome,
         Dead,
@@ -22,7 +23,7 @@ public class EnemyMovement : MonoBehaviour
     /// Key places/objects variables ///
     [SerializeField] private GameObject player;
     private Vector2 lastPlayerPos;
-    // public float playerDist = 4.0f;
+    private float distToPlayer;
     private Vector2 homePos;
 
     /// Timer state maching transitions ///
@@ -31,7 +32,7 @@ public class EnemyMovement : MonoBehaviour
     private float deathTimer = 0.0f;
     // private bool inRange = false;
     private float speed = 2.5f;
-    private float idleSpeed = 1.5f;
+    // private float idleSpeed = 1.5f;
 
     public bool motionlessDebug = false;
 
@@ -39,7 +40,7 @@ public class EnemyMovement : MonoBehaviour
     /// Pathfinding Movement Handler Variables ///
     private float pathUpdateTimer = 0.0f; 
     private const float pathUpdatePeriod = 2.0f; // every 2 seconds
-    private const float centeredDist = 1.0f;
+    private const float centeredDist = 2.0f;
     private int currPathIndex;
     private List<Vector3> pathVectorList;
 
@@ -54,7 +55,6 @@ public class EnemyMovement : MonoBehaviour
             lastPlayerPos = player.transform.position;
 
         homePos = transform.position;
-
     }
 
     // Update is called once per frame
@@ -63,7 +63,7 @@ public class EnemyMovement : MonoBehaviour
         // called for every state
         timeLastSeen += Time.deltaTime;
         pathUpdateTimer += Time.deltaTime;
-        lineOfSight();
+        checkLineOfSight();
         updateState();
         if( (currMove == MoveState.Dead) || (currMove == MoveState.Stagger) )
         {
@@ -78,86 +78,132 @@ public class EnemyMovement : MonoBehaviour
         switch (currMove)
         {
             case MoveState.Follow: // move towards the player
+                if(pathUpdateTimer > pathUpdatePeriod) // every x seconds update the best path
+                {
+                    Vector3 playerPosition = player.transform.position;
+                    SetTargetPosition(playerPosition);
+                    pathUpdateTimer = 0.0f;
+                    // Debug.Log("Updated player position.");
+                }
+                
                 moveTowardsPlayer();
                 // if obstacle in way, use path planning
 
                 // if player outside of range, switch to Stop (Not implemented)
+                // if player within grid distance, go to CloseFollow
+                distToPlayer = Vector3.Distance(player.transform.position, transform.position);
                 // if player out of line of sight for 2 secs, switch to Stop
                 if( !hasLineOfSight && (timeLastSeen > 1.5f))
                 {
                     currMove = MoveState.Stop;
-                    // Debug.Log("Entering Stop State");
+                    // Debug.Log("Entering Stop State from Follow State");
+                } else if (distToPlayer < 5f)
+                {
+                    currMove = MoveState.CloseFollow;
+                    // Debug.Log("Entering Close Follow State from Follow State");
+                }
+                break;
+            case MoveState.CloseFollow:
+                moveDirTowardsPlayer();
+                // if obstacle in way, use path planning
+
+                // if player outside of range, switch to Stop (Not implemented)
+                // if player within grid distance, go to CloseFollow
+                distToPlayer = Vector3.Distance(player.transform.position, transform.position);
+                // if player out of line of sight for 2 secs, switch to Stop
+                if( !hasLineOfSight && (timeLastSeen > 1.5f))
+                {
+                    currMove = MoveState.Stop;
+                    // Debug.Log("Entering Stop State from Follow State");
+                } else if (distToPlayer > 15f)
+                {
+                    currMove = MoveState.Follow;
+                    // Debug.Log("Entering Follow State from Close Follow State");
                 }
                 break;
             case MoveState.Idle: // walk or stay around home position
-
-                // if player is close enough, switch to Follow
+                
+                // if player is in line of sight, switch to Follow
                 if(hasLineOfSight)
                 {
                     currMove = MoveState.Follow;
-                    // Debug.Log("Entering Follow State");
+                    Vector3 playerPosition = player.transform.position;
+                    SetTargetPosition(playerPosition);
+                    pathUpdateTimer = 0.0f;
+                    // Debug.Log("Entering Follow State from Idle State");
                 }
                 break;
             case MoveState.Stop: // stay still
+                
                 // if player close enough, switch to Follow
                 if(hasLineOfSight)
                 {
                     currMove = MoveState.Follow;
+                    Vector3 playerPosition = player.transform.position;
+                    SetTargetPosition(playerPosition);
+                    pathUpdateTimer = 0.0f;
                     // Debug.Log("Entering Follow State");
                 }
                 // if 2 secs have passed, switch to Return Home
                 else if( timeLastSeen > 3.5f )
                 {
                     currMove = MoveState.ReturnHome;
+                    SetTargetPosition(homePos);
+                    pathUpdateTimer = 0.0f;
                     // Debug.Log("Entering Home State");
                 }
                 break;
-            case MoveState.ReturnHome: // go to home position
+            case MoveState.ReturnHome:
+                if(pathUpdateTimer > pathUpdatePeriod)
+                {
+                    // Debug.Log("Updated home position.");
+                    SetTargetPosition(homePos);
+                    pathUpdateTimer = 0.0f;
+                }
+                // go to home position
                 moveTowardsHome();
 
                 float distToHome = calcVectorDistance(transform.position, homePos);
-                // if player is close enough, switch to Follow
+                // if player is in line of sight, switch to Follow
                 if(hasLineOfSight)
                 {
                     currMove = MoveState.Follow;
-                    // Debug.Log("Entering Follow State");
+                    Vector3 playerPosition = player.transform.position;
+                    SetTargetPosition(playerPosition);
+                    pathUpdateTimer = 0.0f;
+                    // Debug.Log("Entering Follow State from Return Home state");
                 }
                 // if at home location, switch to idle
                 else if( distToHome < 1.5 && distToHome > -1.5)
                 {
                     currMove = MoveState.Idle;
-                    // Debug.Log("Entering Idle State");
+                    // Debug.Log("Entering Idle State from ReturnHome state");
                 }
                 break;
-            case MoveState.Dead:
-                // Debug.Log("Using Dead State");
-                // Stay Still
-
+            case MoveState.Dead: // Stay Still, Used to make dying animation not float
+                
                 // if enemy is dead too long without killing object, switch to Idle
                 if(deathTimer > 10.0f)
                 {
                     currMove = MoveState.Idle;
-                    // Debug.Log("Entering Idle State");
+                    // Debug.Log("Entering Idle State from Dead");
                 }
                 break;
-            case MoveState.Stagger:
-                // Debug.Log("Using Dead State");
-                // Stay Still
-
+            case MoveState.Stagger: // Stay Still
+                
                 // if enemy is dead too long without killing object, switch to Idle
                 if (motionlessDebug)
                 {
                     currMove = MoveState.IdleDebug;
-                    // Debug.Log("Entering IdleDebug State");
+                    // Debug.Log("Entering IdleDebug State from Stagger");
                 }
                 else if(deathTimer > 3.0f)
                 {
                     currMove = MoveState.Idle;
-                    // Debug.Log("Entering Idle State");
+                    // Debug.Log("Entering Idle State from Stagger");
                 }
                 break;
             case MoveState.IdleDebug: // Stay Still. Used for Testing Hitboxes
-                // Debug.Log("Using IdleDebug State");
                 
                 break;
             default:
@@ -190,15 +236,21 @@ public class EnemyMovement : MonoBehaviour
     // move towards the player using the pathfinding script
     private void moveTowardsPlayer()
     {
-        transform.position = Vector2.MoveTowards(transform.position, lastPlayerPos, speed * Time.deltaTime);
+        HandlePathFollowMovement();
+    }
+
+    // move directly towards the player
+    private void moveDirTowardsPlayer()
+    {
+        transform.position = Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
     }
 
     private void moveTowardsHome()
     {
-        transform.position = Vector2.MoveTowards(transform.position, homePos, idleSpeed * Time.deltaTime);
+        HandlePathFollowMovement();
     }
 
-    private void lineOfSight()
+    private void checkLineOfSight()
     {
         // Debug.Log("Finding Line of Sight");
         
@@ -236,6 +288,7 @@ public class EnemyMovement : MonoBehaviour
                 // You can also access other components, e.g., changing the color
                 // hit.collider.GetComponent<Renderer>().material.color = Color.red; 
                 // Debug.Log($"Line of sight {hasLineOfSight}");
+                // Debug.Log($"Line of sight {hit.collider.name}");
                 break;
             }
             
@@ -265,30 +318,32 @@ public class EnemyMovement : MonoBehaviour
             // Debug.Log($"Handling Index: {currPathIndex}");
             Vector3 targetPosition = pathVectorList[currPathIndex];
             // Debug.Log($"Target Position: {targetPosition}");
+
             float travelDist = Vector3.Distance(transform.position, targetPosition);
-            // Debug.Log($"Distance to travel: {Vector3.Distance(transform.position, targetPosition)}");
             // Debug.Log($"Distance to travel: {travelDist}");
-            // if( Vector3.Distance(transform.position, targetPosition)  < 1f )
             if( travelDist > centeredDist )
             {
                 Vector3 moveDir = (targetPosition - transform.position).normalized;
                 // Debug.Log($"Move Direction: {moveDir}");
-
-                // float distBefore = Vector3.Distance(transform.position, targetPosition);
                 // animatedWalker.SetMoveVector(moveDir);
-                transform.position = transform.position + moveDir * speed * Time.deltaTime;
-                // Debug.Log($"New Position: {moveDir}");
+
+                transform.position = Vector2.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
+                // Debug.Log($"NPC moving towards {targetPosition}");
+                
             } else
             {
                 currPathIndex++;
+                // Debug.Log($"NPC updated path.");
                 if(currPathIndex >= pathVectorList.Count)
                 {
+                    // Debug.Log($"NPC stopped moving.");
                     StopMoving();
                     // animatedWalker.SetMoveVector(Vector3.zero);
                 }
             }
         } else
         {
+            // Debug.Log($"NPC path vector empty.");
             // Set the animation to 
             // animatedWalker.SetMoveVector(Vector3.zero);
         }
@@ -306,10 +361,20 @@ public class EnemyMovement : MonoBehaviour
 
     public void SetTargetPosition(Vector3 targetPosition)
     {
+        if( !Pathfinding.Instance.InsideGrid(targetPosition) )
+        {
+            Debug.Log("Target(player/home) outside grid");
+            return;
+        }
         // reset path index
         currPathIndex = 0;
         // Get a list of vectors leading to the target position
         Vector3 startPosition = GetPosition();
+        if( !Pathfinding.Instance.InsideGrid(startPosition) )
+        {
+            Debug.Log($"NPC outside grid at {startPosition}");
+            return;
+        }
         // Debug.Log($"Character's position: {GetPosition()}");
         // Debug.Log($"Target position: {targetPosition}");
         pathVectorList = Pathfinding.Instance.FindVPath(startPosition, targetPosition);
@@ -327,6 +392,4 @@ public class EnemyMovement : MonoBehaviour
     //     normVector.Normalize();
     //     return normVector;
     // }
-
-    //private void AStarPathFinding() {}
 }

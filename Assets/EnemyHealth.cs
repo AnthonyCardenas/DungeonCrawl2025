@@ -58,7 +58,11 @@ public class EnemyHealth : MonoBehaviour
         if(currHandler == null)
         {
             GameObject tempObject = GameObject.FindWithTag("GameHandler");
-            currHandler = tempObject.GetComponent<EnemyHandler>();
+            if(tempObject != null)
+            {
+                currHandler = tempObject.GetComponent<EnemyHandler>();
+            }
+            
         }
 
     }

@@ -8,16 +8,19 @@ public class ObstacleAvoidanceTest : MonoBehaviour
     private const int obstacleDepth = 5;
     [SerializeField] private PathFindingVisual pathfindingVisual;
     [SerializeField] private PathfindingMovementHandler pathfindingMovement;
+    [SerializeField] private GameObject targetCharacter;
     [SerializeField] private GameObject obstacleCopy;
     private List<GameObject> obstacleLocations;
 
     private Pathfinding pathfinding;
     [SerializeField] private bool drawDebug = true;
+    [SerializeField] private float gridCellSize = 10.0f;
+    // [SerializeField] private bool followMouse = true;
 
     // // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        pathfinding = new Pathfinding(10, 10);
+        pathfinding = new Pathfinding(10, 10, gridCellSize);
         // Debug.Log("Text buffer for null");
         if( pathfindingVisual != null)
         {
@@ -43,8 +46,16 @@ public class ObstacleAvoidanceTest : MonoBehaviour
         if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
         {
             // testing GenGrid for object instantiation
-            Vector3 mousePosition = InputUtil.GetActiveMouseWorldPosition();
-            pathfinding.GetGrid().GetXY(mousePosition, out int x, out int y);
+            Vector3 targetLocation;
+            if(targetCharacter == null)
+            {
+                targetLocation = InputUtil.GetActiveMouseWorldPosition();
+            } else
+            {
+                targetLocation = targetCharacter.transform.position;
+            }
+            
+            pathfinding.GetGrid().GetXY(targetLocation, out int x, out int y);
             // Debug.Log($"End Position: X: {x}; Y: {y}");
             Vector3 startPosition = pathfindingMovement.transform.position;
             // Debug.Log($"Pathfinding Position: {startPosition}");
@@ -63,7 +74,7 @@ public class ObstacleAvoidanceTest : MonoBehaviour
                         }
                     }
                     
-                    pathfindingMovement.SetTargetPosition(mousePosition);
+                    pathfindingMovement.SetTargetPosition(targetLocation);
                 }
                 else
                 {

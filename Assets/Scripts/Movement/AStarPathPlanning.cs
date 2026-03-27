@@ -14,7 +14,7 @@ public class AStarPathPlanning : MonoBehaviour
     // // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
-        pathfinding = new Pathfinding(10, 10);
+        pathfinding = new Pathfinding(10, 10, 10.0f);
         // Debug.Log("Text buffer for null");
         pathfindingVisual.SetGrid(pathfinding.GetGrid()); // find null error in this line
     }
