@@ -5870,6 +5870,22 @@ Transform:
   - {fileID: 1070307887}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1406042582 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8206832528163285693, guid: 1aa59e9abe2058c44b26ce0d17fee666, type: 3}
+  m_PrefabInstance: {fileID: 7530321165553013894}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 910386c7166a18a43b97cda94114f5ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+--- !u!58 &1406042586 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 3580047904940554649, guid: 1aa59e9abe2058c44b26ce0d17fee666, type: 3}
+  m_PrefabInstance: {fileID: 7530321165553013894}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1408206252
 GameObject:
   m_ObjectHideFlags: 0
@@ -8483,6 +8499,14 @@ PrefabInstance:
       propertyPath: currHandler
       value: 
       objectReference: {fileID: 17675667}
+    - target: {fileID: 5962731534690200828, guid: 1aa59e9abe2058c44b26ce0d17fee666, type: 3}
+      propertyPath: currCollider
+      value: 
+      objectReference: {fileID: 1406042586}
+    - target: {fileID: 5962731534690200828, guid: 1aa59e9abe2058c44b26ce0d17fee666, type: 3}
+      propertyPath: currMovement
+      value: 
+      objectReference: {fileID: 1406042582}
     - target: {fileID: 8290706816851018199, guid: 1aa59e9abe2058c44b26ce0d17fee666, type: 3}
       propertyPath: m_Color.a
       value: 0.78431374

@@ -90,9 +90,36 @@ public class PlayerInteraction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // if enemy is killed, then gain xp, based on the enemy type
+        // Enemy script has to tell player it died
+        // The info I need from it is the xp, or if dropped an egg
+
+        // 1. Check enemy is killed
+        // CHeck enemy type and level
+        // Get the xp from the enemy
+        // int enemyXp = givenXp;
+        // add xp to my player
+
+        // if xp is above certain threshold, level up
+
+
         if (timeBtwAttack > 0)
             timeBtwAttack -= Time.deltaTime;
     }
+
+    // public void EnemyDeathNotification(int xp, GameObject Egg)
+    // {
+    //     if(Egg != null)
+    //     {
+    //         //AddEggToInventory();
+    //     } 
+    //     // [SerializeField] private int PlayerXP = 0;
+    //     PlayerXP += xp;
+    //     if( xp > threshold)
+    //     {
+    //         LevelUp();
+    //     }
+    // }
     
     private IEnumerator ShowSpriteForDuration(float duration)
     {
