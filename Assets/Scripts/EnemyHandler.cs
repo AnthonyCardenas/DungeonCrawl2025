@@ -10,7 +10,7 @@ public class EnemyHandler : MonoBehaviour
     [SerializeField] private DoorTrigger currWestDoor;
     
 
-    [SerializeField] private int maxNumEnemies;
+    // [SerializeField] private int maxNumEnemies;
     [SerializeField] private int currNumEnemies;
 
     // public List<Enemy> enemyArray = new List<Enemy>();
@@ -18,12 +18,12 @@ public class EnemyHandler : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Debug.Log("Started Enemy Handler/Spawner");
-        maxNumEnemies = 2;
+        // Debug.Log("Started Enemy Handler/Spawner");
+        // maxNumEnemies = 2;
         currNumEnemies = 2;
         if(currPrefab == null)
         {
-            Debug.Log("No enemy prefab found in Handler");
+            Debug.Log("No enemy prefab found in Enemy Handler");
         } else
         {
             Vector3 currPos = new Vector3(-3.0f, 5f, 0f);
@@ -53,7 +53,7 @@ public class EnemyHandler : MonoBehaviour
         currNumEnemies--;
         if(currNumEnemies <= 0)
         {
-            Debug.Log("All enemies killed. Doors unlocked.");
+            // Debug.Log("All enemies killed. Doors unlocked.");
             // SetDoorState(DoorState.Unlocked);
             if(currNorthDoor == null)
             {

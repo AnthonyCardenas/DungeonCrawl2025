@@ -24,6 +24,9 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private EnemyMovement currMovement;
     [SerializeField] private Collider2D currCollider;
 
+    // Item Drop Script
+    [SerializeField] private GameObject eggToSpawn;
+
     // public GameObject CurrEnemy;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -63,6 +66,11 @@ public class EnemyHealth : MonoBehaviour
                 currHandler = tempObject.GetComponent<EnemyHandler>();
             }
             
+        }
+
+        if(eggToSpawn == null)
+        {
+            // Debug.Log("No Egg object added to EnemyHealth Script.");
         }
 
     }
@@ -108,29 +116,32 @@ public class EnemyHealth : MonoBehaviour
         
         if(health <= 0)
         {
-            enemyAnimator.SetBool("isDead", true);
-            currMovement.setMoveState(EnemyMovement.MoveState.Dead);
-            currCollider.enabled = false;
-            // Debug.Log("Counting enemy kill with enemy handler");
-            // remove Enemy from Enemy Handler
-            if(currHandler == null)
-            {
-                Debug.Log("No Enemy Handler Script attached");
-            }
-            else
-            {
-                currHandler.RemoveEnemy(); 
-            }
-            if(currInteraction == null)
-            {
-                Debug.Log("No Enemy Interaction Script attached");
-            } 
-            else
-            {
-                currInteraction.DeactivateAttack();
-            }
-            // Debug.Log("Dead Animation Triggered");
-            Destroy(this.gameObject, 1.3f);
+            EnemyDeath();
+            // enemyAnimator.SetBool("isDead", true);
+            // currMovement.setMoveState(EnemyMovement.MoveState.Dead);
+            // currCollider.enabled = false;
+            // // Debug.Log("Counting enemy kill with enemy handler");
+            // // Remove Enemy from Enemy Handler
+            // if(currHandler == null)
+            // {
+            //     Debug.Log("No Enemy Handler Script attached");
+            // }
+            // else
+            // {
+            //     // unlock doors and set enemy count --
+            //     currHandler.RemoveEnemy(); 
+            // }
+            // // Prevents enemy from attacking player while dead
+            // if(currInteraction == null)
+            // {
+            //     Debug.Log("No Enemy Interaction Script attached");
+            // } 
+            // else
+            // {
+            //     currInteraction.DeactivateAttack();
+            // }
+            // // Debug.Log("Dead Animation Triggered");
+            // Destroy(this.gameObject, 1.3f);
         } else
         {
             enemyAnimator.SetBool("isDead", false);
@@ -141,6 +152,62 @@ public class EnemyHealth : MonoBehaviour
         }
 
         // Debug.Log("Enemy took damage");
+    }
+
+    private void EnemyDeath()
+    {
+        ////  Make enemy not interactable with the environment ////
+        // set movement state to stay still
+        currMovement.setMoveState(EnemyMovement.MoveState.Dead);
+        currCollider.enabled = false;
+        
+        // Prevents enemy from attacking player while dead
+        if(currInteraction == null)
+        {
+            Debug.Log("No Enemy Interaction Script attached");
+        } 
+        else
+        {
+            currInteraction.DeactivateAttack();
+        }
+        
+        // Remove Enemy from Enemy Handler
+        if(currHandler == null)
+        {
+            Debug.Log("No Enemy Handler Script attached");
+        }
+        else
+        {
+            // Debug.Log("Counting enemy kill with enemy handler"); 
+            currHandler.RemoveEnemy(); 
+        }
+
+        // Drop egg
+
+        // Destroy object after 1.3 sec to allow explosion animation
+        enemyAnimator.SetBool("isDead", true);
+        Destroy(this.gameObject, 1.3f);
+
+        DropEgg();
+    }
+
+    // private void DeleteEnemy()
+    // {
+    //     // chance to spawn an egg
+    //     DropEgg();
+    //     // delete/deactivate Enemy sprite
+    // }
+
+    private void DropEgg()
+    {
+        if(eggToSpawn != null)
+        {
+            Instantiate(eggToSpawn, transform.position, Quaternion.identity);
+        } else
+        {
+            Debug.Log("No egg attached to enemy.");
+        }
+        
     }
 
 }
