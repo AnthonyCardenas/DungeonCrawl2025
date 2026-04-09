@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 
+[Serializable]
 public class ItemInfoA
 {
    public enum ItemType
@@ -26,7 +28,7 @@ public class ItemInfoA
             case ItemType.Pet:
                 return ItemAssetsA.Instance.petSprite;
             case ItemType.Key:
-                return ItemAssetsA.Instance.petSprite;
+                return ItemAssetsA.Instance.keySprite;
             // case ItemType.Armor:
             //     return ItemAssetsA.Instance.armorSprite;
         }
@@ -44,6 +46,19 @@ public class ItemInfoA
             case ItemType.Key:
                 return new Color(0, 0, 0);
 
+        }
+    }
+
+    public bool IsStackable()
+    {
+        switch(itemType)
+        {
+            default:
+            case ItemType.Egg:
+            case ItemType.Pet:
+                return false;
+            case ItemType.Key:
+                return true;
         }
     }
 }

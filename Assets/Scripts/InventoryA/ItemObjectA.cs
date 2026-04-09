@@ -25,6 +25,17 @@ public class ItemObjectA : MonoBehaviour
         return itemObject;
     }
 
+    public static ItemObjectA DropItem(Vector3 dropPosition, ItemInfoA item)
+    {
+        float randX = Random.Range(-2f, 2f);
+        float randY = Random.Range(-2f, 2f);
+        Vector3 randDir = new Vector3(randX, randY, 0);
+        randDir.Normalize();
+        ItemObjectA ItemObject = SpawnItemObjectA(dropPosition + randDir * 3f, item);
+        ItemObject.GetComponent<Rigidbody2D>().AddForce(randDir * 3f, ForceMode2D.Impulse);
+        return ItemObject;
+    }
+
     public void SetItem(ItemInfoA item)
     {
         this.item = item;
@@ -41,4 +52,5 @@ public class ItemObjectA : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
 }

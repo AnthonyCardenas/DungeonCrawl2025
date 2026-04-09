@@ -10,8 +10,10 @@ public class PlayerA : MonoBehaviour
     // private State state;
     private InventoryA inventory;
     
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Awake()
+    // Option 1: can use IEnumerator to wait for a flag
+    // Option 2: can use [DefaultExecutionOrder(num)] to order which starts first
+    // Start because it needs uiInventory to be made first
+    void Start()
     {
         // Instance = this;
         // playerBase = gameObject.GetComponent<Player_Base>();
@@ -20,8 +22,9 @@ public class PlayerA : MonoBehaviour
         inventory = new InventoryA();
         uiInventory.SetInventory(inventory);
 
-        ItemObjectA.SpawnItemObjectA(new Vector3(5, 0), new ItemInfoA{ itemType=ItemInfoA.ItemType.Pet, amount = 1});
-        ItemObjectA.SpawnItemObjectA(new Vector3(0, 3), new ItemInfoA{ itemType=ItemInfoA.ItemType.Egg, amount = 1});
+        // Spawning here for simplicity
+        // ItemObjectA.SpawnItemObjectA(new Vector3(5, 0), new ItemInfoA{ itemType=ItemInfoA.ItemType.Pet, amount = 1});
+        // ItemObjectA.SpawnItemObjectA(new Vector3(0, 3), new ItemInfoA{ itemType=ItemInfoA.ItemType.Egg, amount = 1});
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
@@ -31,7 +34,7 @@ public class PlayerA : MonoBehaviour
             Debug.Log("Collided with object that was not an item.");
             return;
         }
-        Debug.Log("Collided with object that has the item tag.");
+        // Debug.Log("Collided with object that has the item tag.");
         ItemObjectA itemObject = collider.GetComponent<ItemObjectA>();
         if(itemObject != null)
         {
