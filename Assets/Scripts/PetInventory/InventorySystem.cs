@@ -12,12 +12,15 @@ public class InventorySystem : MonoBehaviour
     private Dictionary<int, GameObject> petList = new Dictionary<int, GameObject>();
     private GameObject activePet;
     private int activePetID;
+
+    private int currID;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         activeEggID = -1;
         activePetID = -1;
+        currID = 0;
     }
 
     // Update is called once per frame
@@ -32,7 +35,9 @@ public class InventorySystem : MonoBehaviour
 
     public int GenUniqueID()
     {
-        return 0;
+        // System.Guid.NewGuid()
+        currID++;
+        return currID;
     }
 
     public void AddEggToList(GameObject newEgg)

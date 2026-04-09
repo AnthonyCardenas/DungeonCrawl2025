@@ -3,6 +3,7 @@ using System.Collections;
 
 public class SpawnedEgg : MonoBehaviour
 {
+    private Item item;
     private SpriteRenderer spriteRenderer;
     private const float hiddenTime = 1.4f;
 
@@ -25,6 +26,17 @@ public class SpawnedEgg : MonoBehaviour
             HideForDuration(hiddenTime);
         }
         
+    }
+
+    public void SetItem(Item item)
+    {
+        this.item = item;
+        // spriteRenderer.sprite = item.GetSprite();
+    }
+
+    public Item GetItem()
+    {
+        return item;
     }
 
     // Update is called once per frame

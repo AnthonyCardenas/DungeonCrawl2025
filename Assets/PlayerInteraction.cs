@@ -35,6 +35,7 @@ public class PlayerInteraction : MonoBehaviour
     // Vector2 boxSizeVector = new Vector2(3.25f, 1.7f); 
     // Vector2 weaponPos = new Vector2(0.0f, 0.0f); 
 
+    ///// Inventory Connection /////
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
